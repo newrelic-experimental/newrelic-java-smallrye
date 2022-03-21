@@ -16,6 +16,7 @@ public abstract class UniSubscriber<T> {
 	
 	@Trace(async = true)
 	public void onFailure(Throwable t) {
+		NewRelic.getAgent().getTracedMethod().setMetricName("Custom","UniSubscriber","onFailure");
 		NewRelic.noticeError(t);
 		if(token != null) {
 			token.linkAndExpire();
@@ -26,6 +27,7 @@ public abstract class UniSubscriber<T> {
 	
 	@Trace(async = true)
 	public void onItem(T x) {
+		NewRelic.getAgent().getTracedMethod().setMetricName("Custom","UniSubscriber","onItem");
 		if(token != null) {
 			token.linkAndExpire();
 			token = null;
@@ -35,6 +37,7 @@ public abstract class UniSubscriber<T> {
 	
 	@Trace
 	public void onSubscribe(UniSubscription sub) {
+		NewRelic.getAgent().getTracedMethod().setMetricName("Custom","UniSubscriber","onSubscribe");
 		Weaver.callOriginal();
 	}
 }

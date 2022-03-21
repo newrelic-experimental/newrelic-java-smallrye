@@ -23,6 +23,7 @@ public abstract class MultiSubscriber<T> {
 
 	@Trace(async = true)
 	public void onItem(T item) {
+		NewRelic.getAgent().getTracedMethod().setMetricName("Custom","MultiSubscriber",getClass().getSimpleName(),"onItem");
 		if(token != null) {
 			token.link();
 		}
@@ -31,6 +32,7 @@ public abstract class MultiSubscriber<T> {
 	
 	@Trace(async = true)
 	public  void onFailure(Throwable failure) {
+		NewRelic.getAgent().getTracedMethod().setMetricName("Custom","MultiSubscriber",getClass().getSimpleName(),"onFailure");
 		if(!errorReported) {
 			NewRelic.noticeError(failure);
 			errorReported = true;
@@ -44,6 +46,7 @@ public abstract class MultiSubscriber<T> {
 	
 	@Trace(async = true)
 	public void onCompletion() {
+		NewRelic.getAgent().getTracedMethod().setMetricName("Custom","MultiSubscriber",getClass().getSimpleName(),"onCompletion");
 		if(token != null) {
 			token.linkAndExpire();
 			token = null;
@@ -53,6 +56,7 @@ public abstract class MultiSubscriber<T> {
 	
 	@Trace(async = true)
 	public void onNext(T t) {
+		NewRelic.getAgent().getTracedMethod().setMetricName("Custom","MultiSubscriber",getClass().getSimpleName(),"onNext");
 		if(token != null) {
 			token.link();
 		}
@@ -61,6 +65,7 @@ public abstract class MultiSubscriber<T> {
 	
 	@Trace(async = true)
 	public void onError(Throwable t) {
+		NewRelic.getAgent().getTracedMethod().setMetricName("Custom","MultiSubscriber",getClass().getSimpleName(),"onError");
 		if(!errorReported) {
 			NewRelic.noticeError(t);
 			errorReported = true;
@@ -74,6 +79,7 @@ public abstract class MultiSubscriber<T> {
 	
 	@Trace(async = true)
 	public void onComplete() {
+		NewRelic.getAgent().getTracedMethod().setMetricName("Custom","MultiSubscriber",getClass().getSimpleName(),"onComplete");
 		if(token != null) {
 			token.linkAndExpire();
 			token = null;
