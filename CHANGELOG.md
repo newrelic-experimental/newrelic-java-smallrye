@@ -1,3 +1,9 @@
+## Version: [v1.0.1](https://github.com/newrelic-experimental/newrelic-java-smallrye/releases/tag/v1.0.1) | Created: 2023-09-22
+### Build Upgrades
+- Pdate build.gradle
+- Updated vendor title and added release workflow
+
+
 ## Installation
 
 To install:
