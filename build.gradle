@@ -12,7 +12,7 @@ buildscript {
 
   dependencies {
     classpath 'gradle-templates:gradle-templates:1.5'
-    classpath 'com.newrelic.agent.java:gradle-verify-instrumentation-plugin:3.2'
+    classpath 'com.newrelic.agent.java:gradle-verify-instrumentation-plugin:4.0'
   }
 }
 
@@ -22,7 +22,7 @@ plugins {
 
 project.ext {
   group = 'com.newrelic.instrumentation.labs'
-  javaAgentVersion = '6.4.0'
+  javaAgentVersion = project.findProperty('java.agent.version')
 
   // Aligned with minimum Java major version supported by latest Java Agent
   javaVersion = JavaVersion.VERSION_1_8
@@ -58,23 +58,7 @@ task cleanUp(type: Delete) {
   }
 }
 
-task checkForDependencies(type: Exec) {
-    environment "JAVAAGENTVERSION", javaAgentVersion
-    def rootProject = projectDir.path
-    def cmdLine = rootProject+'/newrelic-dependencies.sh'
-    workingDir rootProject
-    commandLine  cmdLine
-
-}
-
-task buildIfNeeded {
-   dependsOn checkForDependencies
-   dependsOn jar
-   tasks.findByName('jar').mustRunAfter 'checkForDependencies'
-}
-
 task createModule {
-  dependsOn checkForDependencies
   description = 'Generate project files for a new instrumentation module'
   group = 'New Relic Labs'
   doLast {
@@ -173,7 +157,7 @@ subprojects {
     testImplementation 'com.newrelic.agent.java:newrelic-agent:' + project.javaAgentVersion
   }
 
-  task install(dependsOn: buildIfNeeded, type: Copy) {
+  tasks.register('install', Copy) {
     description = 'Copies compiled jar to the NEW_RELIC_EXTENSIONS_DIR.'
     group  = 'New Relic Labs'
 
@@ -181,10 +165,6 @@ subprojects {
 
     from jar
     into extDir
-  }
-
-  compileJava.doFirst {
-    tasks.findByName('checkForDependencies')
   }
 
   install.doFirst  {
